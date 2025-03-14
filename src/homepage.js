@@ -1,306 +1,183 @@
-import { DateTime } from 'luxon';
-
-$(document).ready(() => {
-  // ----- HERO Animation
-  ScrollTrigger.matchMedia({
-    // Have the animation only on desktop
-    '(min-width: 992px)': function () {
-      // Hero Section
-      $('.hero-intro').each(function () {
-        let heroIntro = $(this);
-        let heroWrap = $(this).find('.hero-intro_wrap');
-        let videoBox = $(this).find('.header01_visual-box');
-        let tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: $(this),
-            start: 'top top',
-            end: 'center top',
-            scrub: 0.2,
-            markers: true,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        // --- Set Section
-        let videoBoxHeight;
-        let videoBoxWidth;
-
-        function setSectionHeight() {
-          $(heroIntro).height(heroWrap.height() * 2);
-          videoBoxHeight = $('.header01_visual-split').height();
-          videoBoxWidth = $('.header01_visual-split').width();
-        }
-
-        function setVideoWidth() {
-          let paddingGlobal = gsap.getProperty('.padding-global', 'padding-left') * 2;
-          return videoBoxWidth + paddingGlobal;
-        }
-
-        function calculateVideoMove() {
-          let topHeight = $(heroIntro).find('.section').eq(0).outerHeight();
-          topHeight *= -1;
-          console.log(topHeight);
-          return topHeight - 4;
-        }
-
-        // Load
-        setSectionHeight();
-
-        // Resize
-        $(window).resize(() => {
-          if ($(window).width() >= 992) {
-            setSectionHeight();
-            $(videoBox).width(() => {
-              return setVideoWidth();
-            });
-            $(videoBox).css({
-              transform: `translate(${() => {
-                return calculateVideoMove();
-              }})`,
-            });
-          } else {
-            $(heroIntro, videoBox).attr('style', '');
-          }
-        });
-
-        // --- Create the Animation
-        tl.fromTo(
-          videoBox,
-          {
-            height: '101svh',
-            width: () => {
-              return '101svw';
-            },
-            y: () => {
-              return calculateVideoMove();
-            },
-          },
-          {
-            height: () => {
-              return videoBoxHeight;
-            },
-            width: () => {
-              return videoBoxWidth;
-            },
-            y: 0,
-          }
-        );
-        tl.fromTo(
-          '.nav',
-          {
-            color: 'rgba(255, 255, 255, 1)',
-            borderColor: 'rgba(234, 236, 240, 0)',
-            backgroundColor: 'rgba(255, 255, 255, 0)',
-          },
-          {
-            keyframes: {
-              '30%': {
-                color: 'rgba(51, 58, 71, 1)',
-              },
-              '50%': {
-                borderColor: 'rgba(234, 236, 240, 1)',
-                backgroundColor: 'rgba(255, 255, 255, 1)',
-              },
-            },
-          },
-          '<'
-        );
-        tl.to(
-          '.header01_content',
-          {
-            keyframes: {
-              '25%': { opacity: 1 },
-              '50%': { opacity: 0 },
-            },
-          },
-          '<'
-        );
-        tl.fromTo(
-          '[hero-intro-move]',
-          {
-            y: '5rem',
-          },
-          {
-            y: '0',
-          },
-          '<'
-        );
-
-        // Project the Time and Date
-        var currentDate = new Date();
-
-        // Date
-        var month = currentDate.toLocaleString('en', { month: 'long' });
-        var day = currentDate.getDate();
-        var year = currentDate.getFullYear();
-
-        // Time
-        var { DateTime } = luxon;
-        var userLocalTime = luxon.DateTime.local();
-        var convertedTime = userLocalTime.toUTC().toFormat('HHmm');
-
-        console.log(convertedTime);
-
-        $('[hero-date]').text(`${month} ${day}, ${year}`);
-        $('[hero-time]').text(`${convertedTime}[ZULU]`);
-
-        // Mouse Coordinates
-        $(document).mousemove(function (event) {
-          $('[mouseX]').text(event.clientX);
-          $('[mouseY]').text(event.clientY);
-        });
+function runHero() {
+  // SPlit
+  function runSplit() {
+    // text splitting code
+    let typeSplit;
+    function runSplitType() {
+      typeSplit = new SplitType('.hero_wrap h1', {
+        types: 'words',
+        tagName: 'span',
       });
+    }
+    runSplitType();
+
+    // run the code when window width changes
+    let windowWidth = window.innerWidth;
+    window.addEventListener('resize', function () {
+      if (windowWidth !== window.innerWidth) {
+        windowWidth = window.innerWidth;
+        typeSplit.revert();
+        runSplitType();
+      }
+    });
+  }
+  runSplit();
+  let tl = gsap.timeline();
+
+  // Init Reveal
+  tl.from(
+    '.section_hp-hero .word',
+    {
+      yPercent: 50,
+      opacity: 0,
+      duration: 2,
+      stagger: {
+        amount: 0.5,
+      },
+      ease: 'power3.out',
     },
-  });
-  let main;
+    '<'
+  );
+  tl.from(
+    ['.hero_wrap p', '.nav_wrapper'],
+    {
+      opacity: 0,
+      duration: 0.5,
+    },
+    '-=1'
+  );
 
-  // ---- CAPABILITIES
-  const navItems = document.querySelectorAll('.cap_navigation-item');
-  const anchors = $('.cap-anchor_box .cap-anchor')
-    .map(function () {
-      return '#' + $(this).attr('id');
-    })
-    .get();
-
-  const findCurrentAnchorIndex = () => {
-    for (let i = 0; i < navItems.length; i++) {
-      if (navItems[i].classList.contains('w--current')) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
-  const scrollToAnchor = (id) => {
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleNavItemClick = (item, index, event) => {
-    if (mobile.matches) {
-      event.preventDefault();
-      event.stopPropagation();
-      navItems.forEach((item) => item.classList.remove('w--current'));
-      item.classList.add('w--current');
-      const slideIndex = index;
-      capSwiper.slideTo(slideIndex);
-    }
-  };
-
-  const mobile = window.matchMedia('(max-width: 991px)');
-  const desktop = window.matchMedia('(min-width: 992px)');
-  let capSwiper = null;
-
-  const swiperMode = () => {
-    const arrowPrev = $('.cap_slider-actions .slider-arrow');
-    arrowPrev.addClass('capabilities-arrow');
-
-    if (desktop.matches) {
-      if (capSwiper) {
-        capSwiper.destroy(true, true);
-        capSwiper = null;
-        $(navItems).removeClass('w--current');
-      }
-    } else if (mobile.matches) {
-      $(navItems).removeClass('w--current');
-      $(navItems).eq(0).addClass('w--current');
-      if (!capSwiper) {
-        capSwiper = new Swiper('.cap_content', {
-          slidesPerView: 1,
-          spaceBetween: 24,
-          speed: 250,
-          observer: true,
-          centeredSlides: true,
-          navigation: {
-            prevEl: '.slider-arrow.prev.capabilities-arrow',
-            nextEl: '.slider-arrow.next.capabilities-arrow',
-          },
-          on: {
-            slideChange: () => {
-              navItems.forEach((item, index) => {
-                if (index === capSwiper.activeIndex) {
-                  item.classList.add('w--current');
-                } else {
-                  item.classList.remove('w--current');
-                }
-              });
-            },
-          },
-        });
-      }
-    }
-  };
-
-  // Events
-  window.addEventListener('load', () => {
-    swiperMode();
-  });
-
-  window.addEventListener('resize', () => {
-    swiperMode();
-  });
-
-  navItems.forEach((item, index) => {
-    item.addEventListener('click', (event) => {
-      handleNavItemClick(item, index, event);
+  // Reveal and scroll anim
+  function initShapeReveal() {
+    let tl = gsap.timeline({
+      onComplete: () => {
+        animateHero();
+      },
     });
-  });
-
-  // Desktop Arrows Click
-  $('.cap_slider-actions.desktop .slider-arrow.prev').click(() => {
-    const currentAnchorIndex = findCurrentAnchorIndex();
-    if (currentAnchorIndex > 0) {
-      scrollToAnchor(anchors[currentAnchorIndex - 1]);
-    } else {
-      scrollToAnchor(anchors[anchors.length - 1]);
-    }
-  });
-
-  $('.cap_slider-actions.desktop .slider-arrow.next').click(() => {
-    const currentAnchorIndex = findCurrentAnchorIndex();
-    if (currentAnchorIndex < anchors.length - 1) {
-      scrollToAnchor(anchors[currentAnchorIndex + 1]);
-    } else {
-      scrollToAnchor(anchors[0]);
-    }
-  });
-
-  let arrowLeft = $('.w-icon-slider-left');
-  let arrowRight = $('.w-icon-slider-right');
-  let customArrows = $('.about__investor-arrow');
-
-  customArrows.on('click', function (element) {
-    getDirection(element);
-  });
-
-  function getDirection(element) {
-    customArrows.each(function () {
-      let directionID = $(this).attr('id');
-
-      if (directionID === 'link-left') {
-        if (arrowLeft.is(':hidden')) {
-          $(this).hide();
-        } else {
-          $(this).show();
-        }
-      }
-
-      if (directionID === 'link-right') {
-        if (arrowRight.is(':hidden')) {
-          $(this).hide();
-        } else {
-          $(this).show();
-        }
-      }
+    // Init reval
+    tl.set('.hp-hero_bg-box', { scale: 4, rotate: 45, y: '90em', x: '-25em' });
+    tl.set('.hp-hero_bg-shape.hp-2', { rotate: -90, y: '-15em', x: '10em' }, '<');
+    $('.hp-hero_bg').css('visibility', 'visible');
+    tl.from(
+      '.hp-hero_bg-shape.hp-1 .hp-hero_bg-shape-inner',
+      {
+        y: '20vw',
+        duration: 3,
+        ease: 'power3.inOut',
+      },
+      '<'
+    );
+    tl.from(
+      '.hp-hero_bg-shape.hp-2 .hp-hero_bg-shape-inner',
+      {
+        y: '20vw',
+        duration: 3,
+        ease: 'power3.inOut',
+      },
+      '<'
+    );
+  }
+  function animateHero() {
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.section_hp-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+        immediateRender: true,
+      },
     });
 
-    let clickedDirection = $(element).attr('id');
-    if (clickedDirection === 'link-left') {
-      arrowLeft.click();
-    }
-    if (clickedDirection === 'link-right') {
-      arrowRight.click();
-    }
+    tl.to('.hp-hero_bg-box', { scale: 1, rotate: 0, y: '0em', x: '0em' });
+    tl.to('.hp-hero_bg-shape.hp-2', { rotate: 0, y: '0em', x: '0em' }, '<');
+    tl.to(
+      ['.hero_wrap h1', '.hero_wrap p'],
+      {
+        keyframes: {
+          '0%': { opacity: 1 },
+          '50%': { opacity: 0 },
+        },
+        stagger: 0.1,
+      },
+      '<'
+    );
   }
 
-  getDirection();
+  //Init
+  initShapeReveal();
+}
+
+function resultsList() {
+  $('.results_list').each(function () {
+    let listItems = $(this).find('.results_list-item');
+
+    listItems.each(function () {
+      let tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: $(this),
+          start: 'top center',
+          end: 'bottom center',
+          toggleActions: 'play reverse play reverse',
+          markers: true,
+        },
+      });
+
+      tl.to($(this), { color: 'white' });
+    });
+  });
+}
+
+function shapeAppears() {
+  $('[data-shape-appear]').each(function () {
+    let shape = $(this);
+    let direction = shape.attr('data-shape-appear');
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: this, // Note: using 'this' directly is fine here
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+
+    // Pass the object of parameters to GSAP
+    if ((direction = 'right')) {
+      tl.from(shape, { rotate: 15, y: '10vh' });
+    }
+  });
+}
+
+function animateCTABG() {
+  $('.cta-bg_wrap').each(function () {
+    let wrap = $(this);
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrap,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+
+    tl.fromTo(
+      wrap.find('.cta-bg_shape').eq(0),
+      { y: '10vh', rotate: 10 },
+      { y: '-10vh', rotate: -10 }
+    );
+    tl.fromTo(
+      wrap.find('.cta-bg_shape').eq(1),
+      { y: '10vh', rotate: -10 },
+      { y: '-10vh', rotate: 10 },
+      '<'
+    );
+  });
+}
+
+$(document).ready(function () {
+  runHero();
+  resultsList();
+  shapeAppears();
+  animateCTABG();
 });

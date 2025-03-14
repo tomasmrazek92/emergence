@@ -1,139 +1,89 @@
-// ------ MENU
+// Scroll
+const navbar = $('.nav_wrapper');
+const scrollHeight = $(navbar).height();
 
-// -- Base
-var menuOpenAnim = false;
-const navbar = '.navbar_wrapper';
-const menuLinksBox = '.nav_links';
-const menuLinks = '.nav_links-inner';
-const menuLinksItems = '.nav_link';
-const dropDownDesc = '.nav_dropdown-menu_description p';
-const menuButton = '.nav_ham';
-
-// -- Menu Animation
-function createNavReveal() {
-  let navReveal = gsap
-    .timeline({
-      paused: true,
-      onComplete: () => {
-        disableScroll();
-      },
-    })
-    .fromTo(menuLinksBox, { display: 'none' }, { display: 'flex' }, '<')
-    .fromTo(menuLinks, { yPercent: -100 }, { yPercent: 0 }, '<');
-  return navReveal;
-}
-
-// Scroll Disabler
-let scrollPosition;
-const disableScroll = () => {
-  if (!menuOpenAnim) {
-    scrollPosition = $(window).scrollTop();
-    $('html, body').scrollTop(0).addClass('overflow-hidden');
-  } else {
-    $('html, body').scrollTop(scrollPosition).removeClass('overflow-hidden');
-  }
-  menuOpenAnim = !menuOpenAnim;
-};
-
-let navReveal;
-let hamAnim;
-
-// GSAP's matchMedia
-ScrollTrigger.matchMedia({
-  '(max-width: 991px)': function () {
-    // Apply the animation only on screens with a max-width of 991px
-    navReveal = createNavReveal();
-    hamAnim = menuToggle();
-  },
-});
-
-// -- Actions
-// Open on Click
-$(menuButton).on('click', () => openMenu());
-
-// Add class on scroll
-window.onscroll = () => {
-  let scrollHeight = $(navbar).height();
-  if ($(navbar)) {
-    if (window.scrollY > scrollHeight / 2) {
-      $(navbar).addClass('pinned');
+$(window).on('scroll', () => {
+  if (navbar.length) {
+    // First check if we've scrolled past initial threshold
+    if (window.scrollY > scrollHeight * 2) {
+      navbar.addClass('fixed');
     } else {
-      $(navbar).removeClass('pinned');
+      navbar.removeClass('fixed');
     }
   }
-};
-
-// Dropdown Open
-$(document).on('click', function (event) {
-  var nav_dropdown = '.nav_dropdown';
-  console.log($(event.target));
-  if (
-    (!$(event.target).is(nav_dropdown) && !$(event.target).parents().is(nav_dropdown)) ||
-    $(event.target).closest(nav_dropdown).find('.w-dropdown-toggle').hasClass('w--open')
-  ) {
-    $(navbar).removeClass('open');
-    return;
-  }
-
-  if (!$(navbar).hasClass('pinned')) {
-    $(navbar).addClass('open');
-  }
 });
 
-// Dropdown Texts
-$('.nav_dropdown-menu_links')
-  .find(menuLinksItems)
-  .on('mouseenter', function () {
-    // Find the index of the current menu link
-    var currentIndex = $(this).index();
-    console.log(currentIndex);
-
-    // Find the corresponding p tag inside nav_dropdown-menu_description
-    var pTag = $(this).closest('.nav_dropdown-menu').find(dropDownDesc).eq(currentIndex);
-    console.log(pTag);
-
-    // Hide all p tags and fadeIn the current index
-    $(dropDownDesc).hide();
-    pTag.fadeTo('fast', 1);
+// Click
+// Function to create observer and handle class change
+function createObserver(targetSelector, callback) {
+  const targetNodes = $(targetSelector);
+  targetNodes.each(function () {
+    const observer = new MutationObserver((mutationsList) => {
+      mutationsList.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          callback(mutation.target);
+        }
+      });
+    });
+    observer.observe(this, { attributes: true, attributeFilter: ['class'] }); // Pass the DOM node directly
   });
-
-// -- Functions
-function openMenu() {
-  if (navReveal) {
-    playMenuAnimation();
-  }
 }
-
-function playMenuAnimation() {
-  if (!menuOpenAnim) {
-    navReveal.play();
-    hamAnim.play();
+function dropdownCallback(targetElement) {
+  if ($(targetElement).hasClass('w--open')) {
+    navbar.addClass('open');
   } else {
-    navReveal.reverse();
-    hamAnim.reverse();
-    disableScroll();
+    navbar.removeClass('open');
   }
 }
 
-function menuToggle() {
-  var tl = new TimelineMax({ paused: true });
-  tl.fromTo($(menuButton).find('.nav_ham-line').eq(0), 0.2, { y: '0' }, { y: '4' })
-    .fromTo($(menuButton).find('.nav_ham-line').eq(2), 0.2, { y: '0' }, { y: '-4' }, '<')
-    .fromTo(
-      $(menuButton).find('.nav_ham-line').eq(1),
-      0.2,
-      { xPercent: 0, opacity: 1 },
-      { xPercent: 100, opacity: 0 },
-      '<'
-    )
-    .fromTo($(menuButton).find('.nav_ham-line').eq(0), 0.2, { rotationZ: 0 }, { rotationZ: 45 })
-    .fromTo(
-      $(menuButton).find('.nav_ham-line').eq(2),
-      0.2,
-      { rotationZ: 0 },
-      { rotationZ: -45 },
-      '<'
-    );
+// Animation
+// Create a single master timeline
+let masterTl = gsap.timeline({ paused: true });
 
-  return tl;
-}
+masterTl
+  .fromTo('.nav_button .button p', { text: 'Menu' }, { text: 'Close' })
+  .from(
+    $('.nav_link .nav_link-inner'),
+    {
+      delay: 0.6,
+      yPercent: 100,
+      stagger: 0.1,
+    },
+    '<'
+  )
+  .from(
+    $('.menu-bg_shape-box.menu-1'),
+    {
+      x: '-50vw',
+      rotate: -10,
+    },
+    '<0.2'
+  )
+  .from(
+    $('.menu-bg_shape-box.menu-2'),
+    {
+      x: '50vw',
+      rotate: 10,
+    },
+    '<0.2'
+  )
+  .from($('.nav_menu-items-role'), { opacity: 0 }, '<0.2');
+
+// Open Logic
+let scrollPosition;
+let menuOpen = false;
+const disableScroll = () => {
+  dropdownCallback('.w-nav-button');
+  if (!menuOpen) {
+    scrollPosition = $(window).scrollTop();
+    $('html, body').scrollTop(0).addClass('overflow-hidden');
+    masterTl.play();
+  } else {
+    $('html, body').scrollTop(scrollPosition).removeClass('overflow-hidden');
+    masterTl.reverse();
+  }
+  menuOpen = !menuOpen;
+};
+
+// Create observers for the elements with their respective callbacks
+createObserver('.w-nav-button', disableScroll);
