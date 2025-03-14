@@ -1,27 +1,10 @@
-function runHero() {
-  // SPlit
-  function runSplit() {
-    // text splitting code
-    let typeSplit;
-    function runSplitType() {
-      typeSplit = new SplitType('.hero_wrap h1', {
-        types: 'words',
-        tagName: 'span',
-      });
-    }
-    runSplitType();
+import { runSplit } from './utils/globalFunctions';
 
-    // run the code when window width changes
-    let windowWidth = window.innerWidth;
-    window.addEventListener('resize', function () {
-      if (windowWidth !== window.innerWidth) {
-        windowWidth = window.innerWidth;
-        typeSplit.revert();
-        runSplitType();
-      }
-    });
-  }
-  runSplit();
+function runHero() {
+  // Split
+
+  runSplit('.hero_wrap h1');
+
   let tl = gsap.timeline();
 
   // Init Reveal
@@ -107,26 +90,6 @@ function runHero() {
   initShapeReveal();
 }
 
-function resultsList() {
-  $('.results_list').each(function () {
-    let listItems = $(this).find('.results_list-item');
-
-    listItems.each(function () {
-      let tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: $(this),
-          start: 'top center',
-          end: 'bottom center',
-          toggleActions: 'play reverse play reverse',
-          markers: true,
-        },
-      });
-
-      tl.to($(this), { color: 'white' });
-    });
-  });
-}
-
 function shapeAppears() {
   $('[data-shape-appear]').each(function () {
     let shape = $(this);
@@ -148,36 +111,7 @@ function shapeAppears() {
   });
 }
 
-function animateCTABG() {
-  $('.cta-bg_wrap').each(function () {
-    let wrap = $(this);
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrap,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
-      },
-    });
-
-    tl.fromTo(
-      wrap.find('.cta-bg_shape').eq(0),
-      { y: '10vh', rotate: 10 },
-      { y: '-10vh', rotate: -10 }
-    );
-    tl.fromTo(
-      wrap.find('.cta-bg_shape').eq(1),
-      { y: '10vh', rotate: -10 },
-      { y: '-10vh', rotate: 10 },
-      '<'
-    );
-  });
-}
-
 $(document).ready(function () {
   runHero();
-  resultsList();
   shapeAppears();
-  animateCTABG();
 });

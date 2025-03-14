@@ -37,37 +37,41 @@ function dropdownCallback(targetElement) {
 }
 
 // Animation
-// Create a single master timeline
-let masterTl = gsap.timeline({ paused: true });
+let masterTl;
+gsap.matchMedia().add('(max-width: 991px)', () => {
+  masterTl = gsap.timeline({ paused: true });
 
-masterTl
-  .fromTo('.nav_button .button p', { text: 'Menu' }, { text: 'Close' })
-  .from(
-    $('.nav_link .nav_link-inner'),
-    {
-      delay: 0.6,
-      yPercent: 100,
-      stagger: 0.1,
-    },
-    '<'
-  )
-  .from(
-    $('.menu-bg_shape-box.menu-1'),
-    {
-      x: '-50vw',
-      rotate: -10,
-    },
-    '<0.2'
-  )
-  .from(
-    $('.menu-bg_shape-box.menu-2'),
-    {
-      x: '50vw',
-      rotate: 10,
-    },
-    '<0.2'
-  )
-  .from($('.nav_menu-items-role'), { opacity: 0 }, '<0.2');
+  masterTl
+    .fromTo('.nav_button .button p', { text: 'Menu' }, { text: 'Close' })
+    .from(
+      $('.nav_link .nav_link-inner'),
+      {
+        delay: 0.6,
+        yPercent: 100,
+        stagger: 0.1,
+      },
+      '<'
+    )
+    .from(
+      $('.menu-bg_shape-box.menu-1'),
+      {
+        x: '-50vw',
+        rotate: -10,
+      },
+      '<0.2'
+    )
+    .from(
+      $('.menu-bg_shape-box.menu-2'),
+      {
+        x: '50vw',
+        rotate: 10,
+      },
+      '<0.2'
+    )
+    .from($('.nav_menu-items-role'), { opacity: 0 }, '<0.2');
+
+  return masterTl;
+});
 
 // Open Logic
 let scrollPosition;
