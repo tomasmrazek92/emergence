@@ -90,28 +90,6 @@ function runHero() {
   initShapeReveal();
 }
 
-function shapeAppears() {
-  $('[data-shape-appear]').each(function () {
-    let shape = $(this);
-    let direction = shape.attr('data-shape-appear');
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: this, // Note: using 'this' directly is fine here
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
-      },
-    });
-
-    // Pass the object of parameters to GSAP
-    if ((direction = 'right')) {
-      tl.from(shape, { rotate: 15, y: '10vh' });
-    }
-  });
-}
-
 $(document).ready(function () {
   runHero();
-  shapeAppears();
 });

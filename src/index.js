@@ -1,6 +1,5 @@
 import { runSplit } from './utils/globalFunctions';
 
-// Function to initialize Swiper only on desktop (992px+)
 function initDesktopSwiper() {
   let swiper;
 
@@ -58,7 +57,6 @@ function resultsList() {
           start: 'top center',
           end: 'bottom center',
           toggleActions: 'play reverse play reverse',
-          markers: true,
         },
       });
 
@@ -198,6 +196,69 @@ function animatePortfolioHero() {
     tl.to($(this).find('.portfolio-hero_shape-inner.cc-2'), { rotate: -5, yPercent: -10 }, '<');
   });
 }
+function animateBlogHero() {
+  $('.section_hero.cc-blog').each(function () {
+    runSplit('.section_hero h1');
+
+    let loader = gsap.timeline();
+
+    loader.from(
+      '.section_hero .word',
+      {
+        yPercent: 50,
+        opacity: 0,
+        duration: 2,
+        stagger: {
+          amount: 0.1,
+        },
+        ease: 'power3.out',
+      },
+      '<'
+    );
+    loader.from(
+      '.section_hero [data-misc]',
+      {
+        opacity: 0,
+        duration: 2,
+        ease: 'power3.out',
+      },
+      '-=1'
+    );
+    loader.from(
+      '.blog-hero_shape.cc-1',
+      {
+        x: '-100vw',
+        yPercent: '100',
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 2,
+      },
+      '0'
+    );
+    loader.from(
+      '.blog-hero_shape.cc-2',
+      {
+        yPercent: -110,
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 2,
+      },
+      '0'
+    );
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: $(this),
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+
+    tl.to($(this).find('.blog-hero_shape-inner.cc-1'), { y: '100vh' });
+    tl.to($(this).find('.blog-hero_shape-inner.cc-2'), { y: '100vh' }, '<');
+  });
+}
 function animateCTABG() {
   $('.cta-bg_wrap').each(function () {
     let wrap = $(this);
@@ -222,6 +283,70 @@ function animateCTABG() {
     );
   });
 }
+function animateCTABGBIG() {
+  $('.cta-big_bg').each(function () {
+    let wrap = $(this);
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrap,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+    tl.fromTo(
+      wrap.find('.cta-big_bg-shape').eq(0),
+      { y: '10vh', rotate: 10 },
+      { y: '-10vh', rotate: -10 }
+    );
+    tl.fromTo(
+      wrap.find('.cta-big_bg-shape').eq(1),
+      { y: '10vh', rotate: -10 },
+      { y: '-10vh', rotate: 10 },
+      '<'
+    );
+    tl.fromTo(
+      wrap.find('.cta-big_bg-shape').eq(2),
+      { y: '10vh', rotate: 5 },
+      { y: '-10vh', rotate: -5 },
+      '<'
+    );
+  });
+}
+function animateSectionHeader() {
+  $('.section_head').each(function () {
+    let self = $(this);
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: $(this),
+        start: 'top center',
+        onEnter: () => {
+          self.addClass('in-view');
+        },
+      },
+    });
+  });
+}
+function shapeAppears() {
+  $('[data-shape-appear]').each(function () {
+    let shape = $(this);
+    let rotateFrom = shape.attr('data-shape-rotate-from');
+    let rotateTo = shape.attr('data-shape-rotate-to');
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: this, // Note: using 'this' directly is fine here
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+
+    // Pass the object of parameters to GSAP
+    tl.fromTo(shape, { rotate: rotateFrom, y: '0vh' }, { rotate: rotateTo, y: '10vh' });
+  });
+}
 
 $(document).ready(function () {
   initDesktopSwiper();
@@ -229,5 +354,9 @@ $(document).ready(function () {
   animateTeamHero();
   animateAboutHero();
   animatePortfolioHero();
+  animateBlogHero();
   animateCTABG();
+  animateCTABGBIG();
+  animateSectionHeader();
+  shapeAppears();
 });
