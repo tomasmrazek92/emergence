@@ -1,6 +1,7 @@
 // Scroll
 const navbar = $('.nav_wrapper');
-const scrollHeight = $(navbar).height();
+// Try to get the .snack-banner height first, fall back to navbar if not found
+const scrollHeight = $('.snack-banner').length ? $('.snack-banner').height() : $(navbar).height();
 
 $(window).on('scroll', () => {
   if (navbar.length) {
