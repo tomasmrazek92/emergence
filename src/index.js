@@ -87,7 +87,7 @@ function animateTeamHero() {
       },
       {
         opacity: 1,
-        duration: 2,
+        duration: 1,
         ease: 'power3.out',
       },
       '-=1'
