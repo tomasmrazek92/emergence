@@ -102,25 +102,36 @@ function animateTeamHero() {
 function animateAboutHero() {
   $('.section_hero.cc-about').each(function () {
     runSplit('.section_hero h1');
-    gsap.from(
+    gsap.fromTo(
       '.section_hero .word',
       {
         yPercent: 50,
         opacity: 0,
+      },
+      {
+        yPercent: 0,
+        opacity: 1,
         duration: 2,
         stagger: {
           amount: 0.1,
         },
         ease: 'power3.out',
       },
+
       '<'
     );
-    gsap.from('.about-hero_shape', {
-      yPercent: 110,
-      stagger: 0.4,
-      ease: 'power3.inOut',
-      duration: 3,
-    });
+    gsap.fromTo(
+      '.about-hero_shape',
+      {
+        yPercent: 110,
+      },
+      {
+        yPercent: 0,
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 3,
+      }
+    );
 
     let tl = gsap.timeline({
       scrollTrigger: {
@@ -140,11 +151,15 @@ function animatePortfolioHero() {
 
     let loader = gsap.timeline();
 
-    loader.from(
+    loader.fromTo(
       '.section_hero .word',
       {
         yPercent: 50,
         opacity: 0,
+      },
+      {
+        yPercent: 0,
+        opacity: 1,
         duration: 2,
         stagger: {
           amount: 0.1,
@@ -153,29 +168,38 @@ function animatePortfolioHero() {
       },
       '<'
     );
-    loader.from(
+    loader.fromTo(
       '.section_hero [data-misc]',
       {
         opacity: 0,
+      },
+      {
+        opacity: 1,
         duration: 2,
         ease: 'power3.out',
       },
       '-=1'
     );
-    loader.from(
+    loader.fromTo(
       '.portfolio-hero_shape.cc-1',
       {
         yPercent: 110,
+      },
+      {
+        yPercent: 0,
         stagger: 0.4,
         ease: 'power3.inOut',
         duration: 2,
       },
       '0'
     );
-    loader.from(
+    loader.fromTo(
       '.portfolio-hero_shape.cc-2',
       {
         yPercent: -110,
+      },
+      {
+        yPercent: 0,
         stagger: 0.4,
         ease: 'power3.inOut',
         duration: 2,
@@ -202,10 +226,13 @@ function animateBlogHero() {
 
     let loader = gsap.timeline();
 
-    loader.from(
+    loader.fromTo(
       '.section_hero .word',
       {
         yPercent: 50,
+      },
+      {
+        yPercent: 0,
         opacity: 0,
         duration: 2,
         stagger: {
@@ -215,30 +242,40 @@ function animateBlogHero() {
       },
       '<'
     );
-    loader.from(
+    loader.fromTo(
       '.section_hero [data-misc]',
       {
         opacity: 0,
+      },
+      {
+        opacity: 1,
         duration: 2,
         ease: 'power3.out',
       },
       '-=1'
     );
-    loader.from(
+    loader.fromTo(
       '.blog-hero_shape.cc-1',
       {
         x: '-100vw',
         yPercent: '100',
+      },
+      {
+        x: '0vw',
+        yPercent: '0',
         stagger: 0.4,
         ease: 'power3.inOut',
         duration: 2,
       },
       '0'
     );
-    loader.from(
+    loader.fromTo(
       '.blog-hero_shape.cc-2',
       {
         yPercent: -110,
+      },
+      {
+        yPercent: 0,
         stagger: 0.4,
         ease: 'power3.inOut',
         duration: 2,
