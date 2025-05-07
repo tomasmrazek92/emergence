@@ -456,6 +456,8 @@ function animateSectionHeader() {
 function shapeAppears() {
   $('[data-shape-appear]').each(function () {
     let shape = $(this);
+    let moveFrom = shape.attr('data-shape-move-from') || '0vh';
+    let moveTo = shape.attr('data-shape-move-to') || '10vh';
     let rotateFrom = shape.attr('data-shape-rotate-from');
     let rotateTo = shape.attr('data-shape-rotate-to');
 
@@ -469,7 +471,7 @@ function shapeAppears() {
     });
 
     // Pass the object of parameters to GSAP
-    tl.fromTo(shape, { rotate: rotateFrom, y: '0vh' }, { rotate: rotateTo, y: '10vh' });
+    tl.fromTo(shape, { y: moveFrom, rotate: rotateFrom }, { y: moveTo, rotate: rotateTo });
   });
 }
 
