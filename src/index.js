@@ -80,6 +80,18 @@ function animateTeamHero() {
       },
       '<'
     );
+    gsap.fromTo(
+      '.section_hero [data-misc]',
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 2,
+        ease: 'power3.out',
+      },
+      '-=1'
+    );
     gsap.from('.team-hero_shape', {
       yPercent: 100,
       stagger: 0.2,
@@ -230,10 +242,11 @@ function animateBlogHero() {
       '.section_hero .word',
       {
         yPercent: 50,
+        opacity: 0,
       },
       {
         yPercent: 0,
-        opacity: 0,
+        opacity: 1,
         duration: 2,
         stagger: {
           amount: 0.1,

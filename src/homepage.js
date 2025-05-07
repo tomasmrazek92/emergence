@@ -8,11 +8,15 @@ function runHero() {
   let tl = gsap.timeline();
 
   // Init Reveal
-  tl.from(
+  tl.fromTo(
     '.section_hp-hero .word',
     {
       yPercent: 50,
       opacity: 0,
+    },
+    {
+      yPercent: 0,
+      opacity: 1,
       duration: 2,
       stagger: {
         amount: 0.5,
@@ -21,10 +25,13 @@ function runHero() {
     },
     '<'
   );
-  tl.from(
+  tl.fromTo(
     ['.hero_wrap p', '.nav_wrapper'],
     {
       opacity: 0,
+    },
+    {
+      opacity: 1,
       duration: 0.5,
     },
     '-=1'
