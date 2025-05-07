@@ -309,6 +309,81 @@ function animateBlogHero() {
     tl.to($(this).find('.blog-hero_shape-inner.cc-2'), { y: '100vh' }, '<');
   });
 }
+function animateConvictionHero() {
+  $('.section_hero.cc-convictions').each(function () {
+    runSplit('.section_hero h1');
+
+    let loader = gsap.timeline();
+
+    loader.fromTo(
+      '.section_hero .word',
+      {
+        yPercent: 50,
+        opacity: 0,
+      },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 2,
+        stagger: {
+          amount: 0.1,
+        },
+        ease: 'power3.out',
+      },
+      '<'
+    );
+    loader.fromTo(
+      '.section_hero [data-misc]',
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 2,
+        ease: 'power3.out',
+      },
+      '-=1'
+    );
+    loader.fromTo(
+      '.convictions-hero_shape.cc-1',
+      {
+        yPercent: '100',
+      },
+      {
+        yPercent: '0',
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 2,
+      },
+      '0'
+    );
+    loader.fromTo(
+      '.convictions-hero_shape.cc-2',
+      {
+        yPercent: -110,
+      },
+      {
+        yPercent: 0,
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 2,
+      },
+      '0'
+    );
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: $(this),
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+
+    tl.to($(this).find('.blog-hero_shape-inner.cc-1'), { y: '100vh' });
+    tl.to($(this).find('.blog-hero_shape-inner.cc-2'), { y: '100vh' }, '<');
+  });
+}
 function animateCTABG() {
   $('.cta-bg_wrap').each(function () {
     let wrap = $(this);
@@ -405,6 +480,7 @@ $(document).ready(function () {
   animateAboutHero();
   animatePortfolioHero();
   animateBlogHero();
+  animateConvictionHero();
   animateCTABG();
   animateCTABGBIG();
   animateSectionHeader();
