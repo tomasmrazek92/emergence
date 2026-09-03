@@ -534,26 +534,23 @@ function shapeAppears() {
 
 function animatePartnerHero() {
   $('.section_partner-hero').each(function () {
-    runSplit('.section_partner-hero h1');
-    gsap.fromTo(
-      '.section_partner-hero .word',
+    let loader = gsap.timeline();
+
+    loader.fromTo(
+      '.partner-hero_shape.cc-1',
       {
-        yPercent: 50,
-        opacity: 0,
+        yPercent: -110,
       },
       {
         yPercent: 0,
-        opacity: 1,
-        duration: 2,
-        stagger: {
-          amount: 0.1,
-        },
-        ease: 'power3.out',
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 3,
       },
-      '<'
+      '0'
     );
-    gsap.fromTo(
-      '.partner-hero_shape',
+    loader.fromTo(
+      '.partner-hero_shape.cc-2',
       {
         yPercent: 110,
       },
@@ -562,7 +559,8 @@ function animatePartnerHero() {
         stagger: 0.4,
         ease: 'power3.inOut',
         duration: 3,
-      }
+      },
+      '0'
     );
 
     let tl = gsap.timeline({
