@@ -532,6 +532,52 @@ function shapeAppears() {
   });
 }
 
+function animatePartnerHero() {
+  $('.section_partner-hero').each(function () {
+    runSplit('.section_partner-hero h1');
+    gsap.fromTo(
+      '.section_partner-hero .word',
+      {
+        yPercent: 50,
+        opacity: 0,
+      },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 2,
+        stagger: {
+          amount: 0.1,
+        },
+        ease: 'power3.out',
+      },
+      '<'
+    );
+    gsap.fromTo(
+      '.partner-hero_shape',
+      {
+        yPercent: 110,
+      },
+      {
+        yPercent: 0,
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 3,
+      }
+    );
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: $(this),
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+
+    tl.to($(this).find('.about-hero_shape-inner'), { yPercent: -100, rotate: -10 });
+  });
+}
+
 $(document).ready(function () {
   initDesktopSwiper();
   resultsList();
@@ -544,5 +590,6 @@ $(document).ready(function () {
   animateCTABGBIG();
   animateSectionHeader();
   shapeAppears();
+  animatePartnerHero();
   animateAINativeHero();
 });
