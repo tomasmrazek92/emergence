@@ -545,7 +545,7 @@ function animatePartnerHero() {
         yPercent: 0,
         stagger: 0.4,
         ease: 'power3.inOut',
-        duration: 3,
+        duration: 1,
       },
       '0'
     );
@@ -558,7 +558,7 @@ function animatePartnerHero() {
         yPercent: 0,
         stagger: 0.4,
         ease: 'power3.inOut',
-        duration: 3,
+        duration: 1,
       },
       '0'
     );
