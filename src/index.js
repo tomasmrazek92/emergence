@@ -531,7 +531,6 @@ function shapeAppears() {
     tl.fromTo(shape, { y: moveFrom, rotate: rotateFrom }, { y: moveTo, rotate: rotateTo });
   });
 }
-
 function animatePartnerHero() {
   $('.section_partner-hero').each(function () {
     let loader = gsap.timeline();
@@ -575,6 +574,61 @@ function animatePartnerHero() {
     tl.to($(this).find('.about-hero_shape-inner'), { yPercent: -100, rotate: -10 });
   });
 }
+function animateCTASplit() {
+  $('.section_cta-split').each(function () {
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: $(this),
+        start: 'top bottom',
+        end: 'center center',
+        scrub: 1,
+        markers: true,
+      },
+    });
+
+    tl.fromTo(
+      '.cta-bg_shape-box.cta-split-1',
+      {
+        yPercent: '-100',
+      },
+      {
+        yPercent: '0',
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 2,
+      },
+      '0'
+    );
+
+    tl.fromTo(
+      '.cta-bg_shape-box.cta-split-2',
+      {
+        yPercent: '100',
+      },
+      {
+        yPercent: '0',
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 2,
+      },
+      '0'
+    );
+
+    tl.fromTo(
+      '.cta-bg_shape-box.cta-split-3',
+      {
+        yPercent: '-100',
+      },
+      {
+        yPercent: '0',
+        stagger: 0.4,
+        ease: 'power3.inOut',
+        duration: 2,
+      },
+      '0'
+    );
+  });
+}
 
 $(document).ready(function () {
   initDesktopSwiper();
@@ -590,4 +644,5 @@ $(document).ready(function () {
   shapeAppears();
   animatePartnerHero();
   animateAINativeHero();
+  animateCTASplit();
 });
