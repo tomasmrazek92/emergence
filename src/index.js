@@ -582,7 +582,6 @@ function animateCTASplit() {
         start: 'top bottom',
         end: 'center center',
         scrub: 1,
-        markers: true,
       },
     });
 
